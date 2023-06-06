@@ -32,7 +32,6 @@ const App = () => {
       number: newNumber,
     }
     const samePerson = persons.find(person => person.name === newName)
-    console.log("Finding same person", samePerson)
     if (samePerson) {
       const changedPerson = {...samePerson, number: newNumber}
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
@@ -41,18 +40,10 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
             setNotification(`Changed the number of ${newName} to ${newNumber}`)
-            setTimeout(() => {
-              setNotification(null)
-            }, 3000)
-          })
-          
+          })  
           .catch(error => {
             setError(true)
             setNotification(`Information of ${newName} has already been removed from server`)
-            setTimeout(() => {
-              setNotification(null)
-              setError(false)
-            }, 3000)
           })
       }
     }else {
@@ -60,13 +51,17 @@ const App = () => {
         .create(personObject)
         .then(response => {
           setPersons(persons.concat(response))
-          
+          setNotification(`Added ${newName}`)
         })
-      setNotification(`Added ${newName}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
+        .catch(error => {
+          console.log(error.response.data)
+          setNotification(error)
+        })
     }
+    setTimeout(() => {
+        setNotification(null)
+        setError(false)
+    }, 3000)
     setNewName('')
     setNewNumber('')
   }
