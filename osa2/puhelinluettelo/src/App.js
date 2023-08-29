@@ -54,8 +54,8 @@ const App = () => {
           setNotification(`Added ${newName}`)
         })
         .catch(error => {
-          console.log(error.response.data)
-          setNotification(error)
+          console.log(error.response.data, )
+          setNotification(error.response.data.error)
         })
     }
     setTimeout(() => {
@@ -122,7 +122,6 @@ const App = () => {
         onSubmit={addPerson}
         name={newName} nameOnChange={handleNameChange}
         number={newNumber} numOnChange={handleNumChange}
-        type="submit"
       />
       <h2>Numbers</h2>
       <div>
