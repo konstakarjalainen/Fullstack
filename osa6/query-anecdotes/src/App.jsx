@@ -6,7 +6,7 @@ import { useNotificationDispatch } from './NotificationContext'
 
 const App = () => {
   const queryClient = useQueryClient()
-
+  const dispatch = useNotificationDispatch()
   const addVote = votedAnecdote => {
     axios.put(`http://localhost:3001/anecdotes/${votedAnecdote.id}`, votedAnecdote).then(res => res.data)
   }
@@ -14,13 +14,14 @@ const App = () => {
   const voteAnecdoteMutation = useMutation({ mutationFn: addVote, 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
-    },
-    onError: () => useNotificationDispatch('ERR')
+    }
   })
   
   const handleVote = (anecdote) => {
     voteAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
-    useNotificationDispatch('VOTE')
+    
+    dispatch({ type:'VOTE', anec: anecdote })
+    setTimeout(() => dispatch({ type:'EMPTY' }), 5000)
   }
 
   const result = useQuery({

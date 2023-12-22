@@ -5,7 +5,9 @@ const notificationReducer = (state, action) => {
     case "ERR":
         return 'too short anecdote, must have length 5 or more'
     case "VOTE":
-        return 
+        return 'Added vote'
+    case "EMPTY":
+        return ""
     default:
         return state
   }
@@ -14,10 +16,10 @@ const notificationReducer = (state, action) => {
 const NotificationContext = createContext()
 
 export const NotificationContextProvider = (props) => {
-  const [notification, notificationDispatch] = useReducer(notificationReducer, true)
+  const [notification, notificationDispatch] = useReducer(notificationReducer, "")
 
   return (
-    <NotificationContext.Provider value={[notification, notificationDispatch] }>
+    <NotificationContext.Provider value={ [notification, notificationDispatch] }>
       {props.children}
     </NotificationContext.Provider>
   )

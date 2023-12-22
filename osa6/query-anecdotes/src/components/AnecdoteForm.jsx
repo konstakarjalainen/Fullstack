@@ -1,14 +1,19 @@
 import axios from "axios"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNotificationDispatch } from "../NotificationContext" 
 
 const createAnecdote = content => axios.post('http://localhost:3001/anecdotes', content).then((res) => res.data)
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
-
+  const dispatch = useNotificationDispatch()
   const newAnecdoteMutation = useMutation({ mutationFn: createAnecdote, 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+    },
+    onError: () => {
+      dispatch({ type:'ERR' })
+      setTimeout(() => dispatch({ type:'EMPTY' }), 5000)
     }
   })
 
